@@ -5,6 +5,8 @@
          http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
          version="2.4">
 
+    <!-- ROOT CONTEXT -->
+
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
@@ -15,6 +17,8 @@
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
+
+    <!-- WEB CONTEXT -->
 
     <servlet>
         <servlet-name>spring-web</servlet-name>

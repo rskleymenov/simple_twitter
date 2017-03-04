@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.simple.twitter.TestRunner;
 import org.simple.twitter.dao.UserDao;
@@ -26,6 +27,7 @@ public class UserDaoSQLImplTest extends TestRunner {
     @Qualifier("SQL")
     private UserDao userDao;
 
+    @Before
     @After
     public void clearTableData() {
         userDao.findAll().forEach(user -> userDao.deleteUser(user.getId()));

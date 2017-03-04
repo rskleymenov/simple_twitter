@@ -4,12 +4,9 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <!-- Migration files -->
-    <include file="migrations/AddUserTable.xml" relativeToChangelogFile="true"/>
-    <include file="migrations/AddUserRolesTable.xml" relativeToChangelogFile="true"/>
-
-
-    <!-- DATALOADING -->
-    <include file="db-data-load.xml" relativeToChangelogFile="true"/>
-
+    <changeSet id="03_04_2017" author="Roman Kleimenov">
+        <loadData file="data/users.csv" tableName="user" relativeToChangelogFile="true">
+            <column name="enabled" type="boolean" />
+        </loadData>
+    </changeSet>
 </databaseChangeLog>
