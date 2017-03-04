@@ -3,4 +3,9 @@
                    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <!-- Migration files -->
+    <include file="migrations/AddUserTable.xml" relativeToChangelogFile="true"/>
+    <include file="migrations/AddUserRolesTable.xml" relativeToChangelogFile="true"/>
+
 </databaseChangeLog>
