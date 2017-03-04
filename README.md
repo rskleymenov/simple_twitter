@@ -9,3 +9,6 @@ Some points of configuration:
     2. For transaction management use @Transaction annotation
     3. DAO used EntityManager (via @PersistenceContext annotation)
     4. Services injected throughout @Autowired annotation
+
+To run mongoDB server use:
+    1. mongod --config D:\\mongodb\\mongo.config
