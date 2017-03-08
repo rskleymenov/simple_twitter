@@ -1,28 +1,45 @@
 package org.simple.twitter.model;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
+import java.sql.Timestamp;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @Getter
 @Setter
-@ToString
-@EqualsAndHashCode
 public class User {
 
     @Id
-    @Column(name = "user_id")
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "username")
+    private String username;
+
+    @Column(name = "password")
+    private String password;
+
+    @Column(name = "enabled")
+    private Boolean enabled;
+
+    @Column(name = "creation_date")
+    private Timestamp creationDate;
+
+    @OneToMany(mappedBy = "user")
+    @Cascade(value = CascadeType.DELETE)
+    private List<Note> notes;
 
 }

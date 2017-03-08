@@ -6,6 +6,9 @@
 
     <!-- Migration files -->
     <include file="migrations/AddUserTable.xml" relativeToChangelogFile="true"/>
-    <include file="migrations/AddUserRolesTable.xml" relativeToChangelogFile="true"/>
+    <include file="migrations/AddNoteTable.xml" relativeToChangelogFile="true"/>
+
+    <!-- DATALOADING -->
+    <include file="db-data-load.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
