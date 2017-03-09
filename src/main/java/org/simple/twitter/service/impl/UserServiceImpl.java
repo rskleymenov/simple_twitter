@@ -2,6 +2,7 @@ package org.simple.twitter.service.impl;
 
 import lombok.extern.log4j.Log4j;
 import org.dozer.Mapper;
+import org.simple.twitter.dto.ResponseLoginDTO;
 import org.simple.twitter.dto.UserDTO;
 import org.simple.twitter.exceptions.NoteAppException;
 import org.simple.twitter.model.User;
@@ -88,6 +89,19 @@ public class UserServiceImpl implements UserService {
             log.error(ex);
             throw new NoteAppException(ex.toString(), HttpStatus.NOT_FOUND);
         }
+    }
+
+    @Override
+    public ResponseLoginDTO loginUser(String username, String password) {
+        List<User> foundUser = userRepository.findByUsernameAndPasswordAndEnabled(username, password, true);
+        if (foundUser.isEmpty()) {
+            throw new NoteAppException("User login or password incorrect or user disabled", HttpStatus.BAD_REQUEST);
+        }
+        if (foundUser.size() != 1) {
+            throw new NoteAppException("DB inconsistency", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        User user = foundUser.stream().findFirst().get();
+        return mapper.map(user, ResponseLoginDTO.class);
     }
 
     private UserDTO mapUserToDTO(User user) {

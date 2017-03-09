@@ -1,5 +1,6 @@
 package org.simple.twitter.service;
 
+import org.simple.twitter.dto.ResponseLoginDTO;
 import org.simple.twitter.dto.UserDTO;
 
 import java.util.List;
@@ -15,5 +16,7 @@ public interface UserService {
     UserDTO findUser(int id);
 
     void deleteUser(int id);
+
+    ResponseLoginDTO loginUser(String username, String password);
 
 }
