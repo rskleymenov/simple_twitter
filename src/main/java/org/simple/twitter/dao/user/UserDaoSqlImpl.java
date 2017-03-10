@@ -1,12 +1,12 @@
 package org.simple.twitter.dao.user;
 
-import org.simple.twitter.dao.DaoImpl;
+import org.simple.twitter.dao.DaoSqlImpl;
 import org.simple.twitter.model.User;
 import org.springframework.stereotype.Repository;
 
 @Repository("SQL")
-public class UserDaoImpl extends DaoImpl<User, Long> implements UserDao {
-    public UserDaoImpl() {
+public class UserDaoSqlImpl extends DaoSqlImpl<User, Long> implements UserDao {
+    public UserDaoSqlImpl() {
         super(User.class);
     }
 }

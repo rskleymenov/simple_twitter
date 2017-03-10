@@ -21,14 +21,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class DaoImpl<EntityType extends ModelEntity, ID> implements Dao<EntityType, ID> {
+public abstract class DaoSqlImpl<EntityType extends ModelEntity, ID> implements Dao<EntityType, ID> {
 
     @Autowired
     private DataSource dataSource;
     
     protected Class<EntityType> entityClass;
 
-    public DaoImpl(Class<EntityType> entityClass) {
+    public DaoSqlImpl(Class<EntityType> entityClass) {
         this.entityClass = entityClass;
     }
     
@@ -82,7 +82,8 @@ public abstract class DaoImpl<EntityType extends ModelEntity, ID> implements Dao
             PreparedStatement pst = connection.prepareStatement(
                     SELECT_FROM + " " + 
                             entityClass.getSimpleName() + 
-                            " " + WHERE + " id = ?");
+                            " " + WHERE + " " + 
+                            EntityType.ID + " = ?");
             pst.setString(1, id.toString());
             rs = pst.executeQuery();
             
@@ -107,8 +108,8 @@ public abstract class DaoImpl<EntityType extends ModelEntity, ID> implements Dao
                     UPDATE + " " + entityClass.getSimpleName() + " " +
                     SET + " " +
                     getUpdateFieldsAndValues(entity) + " " +
-                    WHERE + " id=" + entity.getId()
-            );
+                    WHERE + " " + 
+                    EntityType.ID + "=" + entity.getId());
             preparedStatement.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -121,7 +122,8 @@ public abstract class DaoImpl<EntityType extends ModelEntity, ID> implements Dao
         ResultSet rs;
         try (Connection connection = getConnection()){
             PreparedStatement pst = connection.prepareStatement(
-                    DELETE + " " + entityClass.getSimpleName() + " " + WHERE + " " + "id=?"
+                    DELETE + " " + entityClass.getSimpleName() + " " + WHERE + " " + EntityType.ID
+                            + "=?"
             );
             pst.setString(1, id.toString());
             pst.executeUpdate();
@@ -172,8 +174,12 @@ public abstract class DaoImpl<EntityType extends ModelEntity, ID> implements Dao
             fieldsAndValues
                     .append(field.getName())
                     .append("=")
-                    .append(field.getReadMethod().invoke(entity));
+                    .append("'")
+                    .append(field.getReadMethod().invoke(entity))
+                    .append("'")
+                    .append(",");
         }
+        fieldsAndValues.deleteCharAt(fieldsAndValues.lastIndexOf(","));
         return fieldsAndValues.toString();
     }
 
