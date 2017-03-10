@@ -31,7 +31,7 @@ public class UserDaoTest extends AbstractSpringRunner {
 
     @Test
     public void testRead() {
-        System.out.println("!!!!!!! Hello, It's testCreate !!!!!!!");
+        System.out.println("!!!!!!! Hello, It's testRead !!!!!!!");
         userDao.create(testUser);
         User readUser = userDao.read(testUser.getId());
         Assert.assertNotNull(readUser);
@@ -40,11 +40,30 @@ public class UserDaoTest extends AbstractSpringRunner {
 
     @Test
     public void testDelete() {
-        System.out.println("!!!!!!! Hello, It's testCreate !!!!!!!");
+        System.out.println("!!!!!!! Hello, It's testDelete !!!!!!!");
         userDao.create(testUser);
         boolean wasDeleted = userDao.delete(testUser.getId());
         Assert.assertTrue(wasDeleted);
         Assert.assertTrue(userDao.findAll().size() == 0);
+    }
+
+    @Test
+    public void testFindAll() {
+        System.out.println("!!!!!!! Hello, It's testFindAll !!!!!!!");
+        userDao.create(testUser);
+        Assert.assertTrue(userDao.findAll().size() == 1);
+    }
+
+    @Test
+    public void testUpdate() {
+        System.out.println("!!!!!!! Hello, It's testUpdate !!!!!!!");
+        final String newPass = "1111";
+        userDao.create(testUser);
+        testUser.setPassword(newPass);
+        userDao.update(testUser);
+        User readUser = userDao.read(testUser.getId());
+        Assert.assertNotNull(readUser);
+        Assert.assertEquals(readUser.getPassword(), newPass);
     }
     
     
