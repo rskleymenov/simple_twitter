@@ -12,7 +12,6 @@
     <!-- Import contexts -->
     <import resource="app-context-configuration.xml"/>
     <import resource="app-context-datasource.xml"/>
-    <import resource="app-context-persistence.xml"/>
     <import resource="app-context-liquibase.xml"/>
 
     <!-- Scan the config -->

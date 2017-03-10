@@ -4,4 +4,5 @@ import java.io.Serializable;
 
 public interface ModelEntity<ID> extends Serializable{
     ID getId();
+    String ID = "id";
 }
