@@ -58,8 +58,9 @@ public class UserServiceImpl implements UserService {
         List<User> sameUsername = userRepository.findByUsername(userDTO.getUsername());
         if (loadedUser == null) {
             throw new NoteAppException("User is not stored in db", HttpStatus.NOT_FOUND);
-        } else if (!sameUsername.isEmpty()) {
-            throw new NoteAppException("Same username is already stored to db", HttpStatus.BAD_REQUEST);
+        }
+        if (!sameUsername.isEmpty() && (sameUsername.get(0).getId() != userDTO.getId())) {
+            throw new NoteAppException("User with same username already exists!", HttpStatus.BAD_REQUEST);
         }
         User save = null;
         mapper.map(userDTO, loadedUser);

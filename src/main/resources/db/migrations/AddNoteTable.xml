@@ -10,7 +10,7 @@
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="user_id" type="INT"/>
-            <column name="note_message" type="VARCHAR(40)"/>
+            <column name="note_message" type="VARCHAR(100)"/>
             <column name="done" type="BOOLEAN"/>
             <column name="creation_date" type="TIMESTAMP"/>
         </createTable>
