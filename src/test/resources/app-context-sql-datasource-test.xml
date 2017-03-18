@@ -2,7 +2,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:jdbc="http://www.springframework.org/schema/jdbc"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd">
+        http://www.springframework.org/schema/beans/spring-beans.xsd" profile="SQL">
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
         <constructor-arg>
@@ -12,5 +12,6 @@
             </bean>
         </constructor-arg>
     </bean>
+    <import resource="app-context-liquibase.xml"/>
 
 </beans>

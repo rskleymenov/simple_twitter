@@ -4,6 +4,7 @@ import com.mysql.jdbc.Statement;
 import org.simple.twitter.model.ModelEntity;
 import org.simple.twitter.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import sun.reflect.Reflection;
 
 import javax.sql.DataSource;
@@ -21,7 +22,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class DaoSqlImpl<EntityType extends ModelEntity, ID> implements Dao<EntityType, ID> {
+@Profile("SQL")
+public class DaoSqlImpl<EntityType extends ModelEntity, ID> implements Dao<EntityType, ID> {
 
     @Autowired
     private DataSource dataSource;
@@ -55,8 +57,7 @@ public abstract class DaoSqlImpl<EntityType extends ModelEntity, ID> implements 
     }
 
     @Override
-    public ID create(EntityType entity) {
-        ID id = null;
+    public void create(EntityType entity) {
         try (Connection connection = getConnection()){
             PreparedStatement preparedStatement =
                     connection.prepareStatement(getCreateSQL(entity), 
@@ -64,14 +65,9 @@ public abstract class DaoSqlImpl<EntityType extends ModelEntity, ID> implements 
 
             preparedStatement.executeUpdate();
 
-            ResultSet generatedKeyRS = preparedStatement.getGeneratedKeys();
-            if (generatedKeyRS.next()) {
-                id = (ID) generatedKeyRS.getObject(1);
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return id;
     }
     
     @Override

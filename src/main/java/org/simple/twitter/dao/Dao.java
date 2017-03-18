@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface Dao<EntityType extends ModelEntity, ID> extends Serializable {
     List<EntityType> findAll();
-    ID create(EntityType entity);
+    void create(EntityType entity);
     EntityType read(ID id);
     void update(EntityType entity);
     boolean delete(ID id);

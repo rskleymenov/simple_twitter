@@ -3,6 +3,7 @@ package org.simple.twitter.dao;
 import com.mongodb.*;
 import org.simple.twitter.model.ModelEntity;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -12,7 +13,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class DaoNoSqlImpl <EntityType extends ModelEntity, ID> implements Dao<EntityType, ID> {
+@Profile("NoSQL")
+public class DaoNoSqlImpl <EntityType extends ModelEntity, ID> implements Dao<EntityType, ID> {
 
     @Value("${mongodb.name}")
     private String dbName;
@@ -30,85 +32,127 @@ public abstract class DaoNoSqlImpl <EntityType extends ModelEntity, ID> implemen
     @Override
     public List<EntityType> findAll() {
         List<EntityType> entities = new ArrayList<>();
-        DBCursor cursor = getEntityCollection().find();
-        while (cursor.hasNext()) {
-            DBObject dbUser = cursor.next();
-            try {
-                entities.add(mapObjectToEntity(dbUser));
-            } catch (Exception e) {
-                e.printStackTrace();
+        Mongo mongo = null;
+        try {
+            mongo = getMongo();
+            DB db = mongo.getDB(dbName);
+            DBCursor cursor = db.getCollection(entityClass.getSimpleName()).find();
+            while (cursor.hasNext()) {
+                DBObject dbUser = cursor.next();
+                try {
+                    entities.add(mapObjectToEntity(dbUser));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } finally {
+            if (mongo != null) {
+                mongo.close();
             }
         }
         return entities;
     }
 
     @Override
-    public ID create(EntityType entity) {
-        DBCollection collection = getEntityCollection();
-        ID id = null;
+    public void create(EntityType entity) {
+        Mongo mongo = null;
         try {
+            mongo = getMongo();
+            DB db = mongo.getDB(dbName);
+            DBCollection collection = db.getCollection(entityClass.getSimpleName());
             DBObject basicDBObject = mapEntityToObject(entity);
-            id = (ID) collection.insert(basicDBObject).getField(EntityType.ID);
+            collection.insert(basicDBObject);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            if (mongo != null) {
+                mongo.close();
+            }
         }
-        return id;
     }
 
     @Override
     public EntityType read(ID id) {
-        DBCollection collection = getEntityCollection();
-        BasicDBObject searchQuery = new BasicDBObject();
-        searchQuery.put(EntityType.ID, id);
-        DBCursor cursor = collection.find(searchQuery);
-        if (cursor.hasNext()) {
-            DBObject object = cursor.next();
-            try {
-                return mapObjectToEntity(object);
-            } catch (Exception e) {
-                e.printStackTrace();
+        Mongo mongo = null;
+        EntityType entityType = null;
+        try {
+            mongo = getMongo();
+            DB db = mongo.getDB(dbName);
+            DBCollection collection = db.getCollection(entityClass.getSimpleName());
+            BasicDBObject searchQuery = new BasicDBObject();
+            searchQuery.put(EntityType.ID, id);
+            DBCursor cursor = collection.find(searchQuery);
+            if (cursor.hasNext()) {
+                DBObject object = cursor.next();
+                entityType = mapObjectToEntity(object);
+            } 
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (mongo != null) {
+                mongo.close();
             }
         }
-        return null;
+        return entityType;
     }
 
     @Override
     public void update(EntityType entity) {
-        DBCollection collection = getEntityCollection();
-        DBObject searchQuery = new BasicDBObject();
-        searchQuery.put(EntityType.ID, entity.getId());
-
-        DBObject newEntityObject = null;
+        Mongo mongo = null;
         try {
-            newEntityObject = mapEntityToObject(entity);
-        } catch (Exception e) {
-            e.printStackTrace();
+            mongo = getMongo();
+            DB db = mongo.getDB(dbName);
+            DBCollection collection = db.getCollection(entityClass.getSimpleName());
+            DBObject searchQuery = new BasicDBObject();
+            searchQuery.put(EntityType.ID, entity.getId());
+
+            DBObject newEntityObject = null;
+            try {
+                newEntityObject = mapEntityToObject(entity);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            BasicDBObject updatedEntityObject = new BasicDBObject();
+            updatedEntityObject.append("$set", newEntityObject);
+
+            collection.update(searchQuery, updatedEntityObject);
+        } finally {
+            if (mongo != null) {
+                mongo.close();
+            }
         }
-
-        BasicDBObject updatedEntityObject = new BasicDBObject();
-        updatedEntityObject.append("$set", newEntityObject);
-
-        collection.update(searchQuery, updatedEntityObject);
     }
 
     @Override
     public boolean delete(ID id) {
-        DBCollection collection = getEntityCollection();
-        DBObject deleteQuery = new BasicDBObject();
-        deleteQuery.put(EntityType.ID, id);
-        return collection.remove(deleteQuery).getError().isEmpty();
+        Mongo mongo = null;
+        boolean wasRemoved = false;
+        try {
+            mongo = getMongo();
+            DB db = mongo.getDB(dbName);
+            DBCollection collection = db.getCollection(entityClass.getSimpleName());
+            DBObject deleteQuery = new BasicDBObject();
+            deleteQuery.put(EntityType.ID, id);
+            String err = collection.remove(deleteQuery).getError();
+            if (err == null || err.isEmpty()) {
+                wasRemoved = true;
+            }
+        } finally {
+            if(mongo != null) {
+                mongo.close();
+            }
+        }
+        return wasRemoved;
     }
 
-    private DBCollection getEntityCollection() {
-        DBCollection collection = null;
+    private Mongo getMongo() {
         try {
-            MongoClient mongoClient = new MongoClient(localhost, Integer.valueOf(port));
-            DB db = mongoClient.getDB(dbName);
-            collection = db.getCollection(entityClass.getSimpleName());
+            return new MongoClient(localhost, Integer.valueOf(port));
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-        return collection;
+        return null;
     }
 
     private EntityType mapObjectToEntity(DBObject dbUser) throws IllegalAccessException, InstantiationException, IntrospectionException, InvocationTargetException {

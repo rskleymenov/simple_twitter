@@ -7,11 +7,12 @@
        http://www.springframework.org/schema/context/spring-context.xsd">
 
     <!-- Import contexts -->
-    <import resource="app-context-datasource-test.xml"/>
-    <import resource="app-context-liquibase.xml"/>
+    <import resource="app-context-sql-datasource-test.xml"/>
     <import resource="app-context-configuration.xml"/>
 
     <!-- Scan the config -->
     <context:component-scan base-package="org.simple.twitter"/>
+    <!-- Enable Annotation Driven Configuration -->
+    <context:annotation-config />
 
 </beans>
