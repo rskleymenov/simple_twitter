@@ -10,7 +10,7 @@ import org.simple.twitter.model.User;
 
 public abstract class BaseUserDaoTest extends SpringTestRunnable {
     protected UserDao userDao;
-    private final User testUser = new User(0l, "user1", "12345", true);
+    private final User testUser = new User(0, "user1", "12345", true);
 
     @After
     public void clearDB() {

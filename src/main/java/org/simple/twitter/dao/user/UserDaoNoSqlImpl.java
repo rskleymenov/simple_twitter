@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository("NoSQL")
 @Profile("NoSQL")
-public class UserDaoNoSqlImpl extends DaoNoSqlImpl<User, Long> implements UserDao {
+public class UserDaoNoSqlImpl extends DaoNoSqlImpl<User, Integer> implements UserDao {
     public UserDaoNoSqlImpl() {
         super(User.class);
     }

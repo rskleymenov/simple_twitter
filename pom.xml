@@ -83,14 +83,6 @@
             <version>${hibernate.version}</version>
         </dependency>
 
-        <!-- MYSQL CONNECTOR -->
-
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.9</version>
-        </dependency>
-
         <!-- LOMBOK -->
 
         <dependency>
@@ -98,6 +90,14 @@
             <artifactId>lombok</artifactId>
             <version>1.16.14</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- MYSQL CONNECTOR -->
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.9</version>
         </dependency>
 
         <!-- LIQUIBASE -->
