@@ -8,8 +8,8 @@ import lombok.*;
 @Setter
 @ToString
 @EqualsAndHashCode
-public class User implements ModelEntity<Long> {
-    Long id;
+public class User implements ModelEntity<Integer> {
+    Integer id;
     String login;
     String password = "";
     Boolean enabled = true;    

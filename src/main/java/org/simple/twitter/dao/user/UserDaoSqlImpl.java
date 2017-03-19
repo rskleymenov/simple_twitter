@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository("SQL")
 @Profile("SQL")
-public class UserDaoSqlImpl extends DaoSqlImpl<User, Long> implements UserDao {
+public class UserDaoSqlImpl extends DaoSqlImpl<User, Integer> implements UserDao {
     public UserDaoSqlImpl() {
         super(User.class);
     }

@@ -4,9 +4,9 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <changeSet id="03_04_2017" author="Roman Kleimenov">
+    <changeSet id="03_04_2017" author="Oleksii">
         <createTable tableName="user">
-            <column name="id" type="LONG" autoIncrement="true">
+            <column name="id" type="int" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="login" type="VARCHAR(40)"/>

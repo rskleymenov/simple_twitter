@@ -17,7 +17,6 @@ import org.springframework.test.context.ActiveProfiles;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
 @ActiveProfiles("NoSQL")
 public class NoSqlUserDaoTest extends BaseUserDaoTest {
