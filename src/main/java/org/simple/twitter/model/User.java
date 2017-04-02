@@ -10,7 +10,7 @@ import lombok.*;
 @EqualsAndHashCode
 public class User implements ModelEntity<Integer> {
     Integer id;
-    String login;
+    String login = "";
     String password = "";
     Boolean enabled = true;    
 }

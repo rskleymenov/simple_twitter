@@ -1,21 +1,25 @@
 package org.simple.twitter.controller;
 
-import org.simple.twitter.dao.user.UserDao;
+import org.simple.twitter.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-@Profile("SQL")
+import java.util.HashMap;
+import java.util.Map;
+
 @Controller
 public class UserController {
     @Autowired
-    private UserDao userDao;
+    private UserService userService;
     
-    @RequestMapping(path = "/users", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public ModelAndView getAllUsers() {
-        return new ModelAndView("userView", "users", userDao.findAll());
+        Map<String, Object> map = new HashMap();
+        map.put("users", userService.findAll());
+        map.put("technology", "Spring MVC");
+        return new ModelAndView("userView", map);
     }
 }
