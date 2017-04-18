@@ -32,7 +32,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDTO> getAllStoredUsers() {
         List<UserDTO> users = new ArrayList<>();
-        userRepository.findAll().forEach(user -> users.add(mapUserToDTO(user)));
+        Iterable<User> userRepositoryAll = userRepository.findAll();
+        for (User user : userRepositoryAll) {
+            users.add(mapUserToDTO(user));
+        }
         return users;
     }
 
@@ -101,7 +104,7 @@ public class UserServiceImpl implements UserService {
         if (foundUser.size() != 1) {
             throw new NoteAppException("DB inconsistency", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        User user = foundUser.stream().findFirst().get();
+        User user = foundUser.get(0);
         return mapper.map(user, ResponseLoginDTO.class);
     }
 

@@ -19,7 +19,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Log4j
 @Service
@@ -36,7 +35,10 @@ public class NoteServiceImpl implements NoteService {
     @Override
     public List<NoteDTO> getAllStoredNotes() {
         List<NoteDTO> notes = new ArrayList<>();
-        noteRepository.findAll().forEach(note -> notes.add(mapNoteToDto(note)));
+        Iterable<Note> noteRepositoryAll = noteRepository.findAll();
+        for (Note note : noteRepositoryAll) {
+            notes.add(mapNoteToDto(note));
+        }
         return notes;
     }
 
@@ -101,9 +103,11 @@ public class NoteServiceImpl implements NoteService {
             throw new NoteAppException("User is not stored in db", HttpStatus.NOT_FOUND);
         }
         List<Note> notes = noteRepository.findByUserId(id);
-        return notes.stream()
-            .map(this::mapNoteToDto)
-            .collect(Collectors.toList());
+        List<NoteDTO> noteDTOS = new ArrayList<>();
+        for (Note note : notes) {
+            noteDTOS.add(mapNoteToDto(note));
+        }
+        return noteDTOS;
     }
 
     private Note mapDtoToNote(NoteDTO noteDTO) {
